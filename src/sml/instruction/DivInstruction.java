@@ -18,15 +18,10 @@ public class DivInstruction extends Instruction {
 
     @Override
     public int execute(Machine m) throws ArithmeticException{
-        try {
-            int value1 = m.getRegisters().get(result);
-            int value2 = m.getRegisters().get(source);
-            m.getRegisters().set(result, value1 / value2);
-            return NORMAL_PROGRAM_COUNTER_UPDATE;
-        }
-        catch (ArithmeticException ex){
-            throw new ArithmeticException();
-        }
+        int value1 = m.getRegisters().get(result);
+        int value2 = m.getRegisters().get(source);
+        m.getRegisters().set(result, value1 / value2);
+        return NORMAL_PROGRAM_COUNTER_UPDATE;
     }
     @Override
     //TODO: implement method
