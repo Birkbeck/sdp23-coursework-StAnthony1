@@ -33,15 +33,21 @@ public final class Machine {
 	 * Execute the program in program, beginning at instruction 0.
 	 * Precondition: the program and its labels have been stored properly.
 	 */
-	public void execute() {
+	//TODO Catch arithmetic exception thrown by DivInstruction.execute()
+	public void execute() throws ArithmeticException{
 		programCounter = 0;
 		registers.clear();
 		while (programCounter < program.size()) {
-			Instruction ins = program.get(programCounter);
-			int programCounterUpdate = ins.execute(this);
-			programCounter = (programCounterUpdate == NORMAL_PROGRAM_COUNTER_UPDATE)
-				? programCounter + 1
-				: programCounterUpdate;
+			try {
+				Instruction ins = program.get(programCounter);
+				int programCounterUpdate = ins.execute(this);
+				programCounter = (programCounterUpdate == NORMAL_PROGRAM_COUNTER_UPDATE)
+						? programCounter + 1
+						: programCounterUpdate;
+			}
+			catch (ArithmeticException exe){
+				throw new ArithmeticException();
+			}
 		}
 	}
 
