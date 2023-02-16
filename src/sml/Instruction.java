@@ -48,7 +48,7 @@ public abstract class Instruction {
 		return (getLabel() == null) ? "" : getLabel() + ": ";
 	}
 
-	public abstract boolean equals();
+	public abstract boolean equals(Object o);
 	@Override
 	public abstract int hashCode();
 
