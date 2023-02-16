@@ -48,12 +48,11 @@ public abstract class Instruction {
 		return (getLabel() == null) ? "" : getLabel() + ": ";
 	}
 
-	// TODO: What does abstract in the declaration below mean?
-	//       it means that all concrete subclasses of this abstract class must
-	//		implement a toString() method - subclasses without such a method will
-	//		not compile.
+	public abstract boolean equals();
+	@Override
+	public abstract int hashCode();
+
 	@Override
 	public abstract String toString();
 
-	// TODO: Make sure that subclasses also implement equals and hashCode (needed in class Machine).
 }
