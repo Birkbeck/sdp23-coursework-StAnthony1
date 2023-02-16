@@ -35,5 +35,8 @@ public class Main {
 			//TODO could add more detail to this exception (program counter, register containing 0)
 			System.out.println("Machine cannot divide by zero");
 		}
+		catch (NullPointerException e){
+			System.out.println("Machine's labels field has no key corresponding the label passed in jnz instruction");
+		}
 	}
 }

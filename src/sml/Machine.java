@@ -34,20 +34,15 @@ public final class Machine {
 	 * Precondition: the program and its labels have been stored properly.
 	 */
 	//TODO Catch arithmetic exception thrown by DivInstruction.execute()
-	public void execute() throws ArithmeticException{
+	public void execute() throws ArithmeticException, NullPointerException{
 		programCounter = 0;
 		registers.clear();
 		while (programCounter < program.size()) {
-			try {
-				Instruction ins = program.get(programCounter);
-				int programCounterUpdate = ins.execute(this);
-				programCounter = (programCounterUpdate == NORMAL_PROGRAM_COUNTER_UPDATE)
-						? programCounter + 1
-						: programCounterUpdate;
-			}
-			catch (ArithmeticException exe){
-				throw new ArithmeticException();
-			}
+			Instruction ins = program.get(programCounter);
+			int programCounterUpdate = ins.execute(this);
+			programCounter = (programCounterUpdate == NORMAL_PROGRAM_COUNTER_UPDATE)
+					? programCounter + 1
+					: programCounterUpdate;
 		}
 	}
 
