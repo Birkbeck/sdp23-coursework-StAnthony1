@@ -49,7 +49,9 @@ public abstract class Instruction {
 	}
 
 	// TODO: What does abstract in the declaration below mean?
-	//       (Write a short explanation.)
+	//       it means that all concrete subclasses of this abstract class must
+	//		implement a toString() method - subclasses without such a method will
+	//		not compile.
 	@Override
 	public abstract String toString();
 
