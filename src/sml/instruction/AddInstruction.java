@@ -29,6 +29,17 @@ public class AddInstruction extends Instruction {
 		m.getRegisters().set(result, value1 + value2);
 		return NORMAL_PROGRAM_COUNTER_UPDATE;
 	}
+	@Override
+	//TODO: implement method
+	public boolean equals(Object o) {
+		return true;
+	}
+
+	@Override
+	//TODO: implement method
+	public int hashCode(){
+		return 1;
+	}
 
 	@Override
 	public String toString() {
