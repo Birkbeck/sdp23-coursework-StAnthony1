@@ -165,11 +165,19 @@ There are two components to this coursework assignment.
 1. Complete the methods in the `Instruction` class — this may require you to add some fields,  
    which should be *protected*, so that they are accessible in any subclasses.
 
-2. Now create a subclass of `Instruction` for each kind of SML instruction and fix 
+2. Updated: Study the implementation of a concrete subclass AddInstruction of Instruction and associated 
+   test class AddInstructionTest.
+
+   OLd: Now create a subclass of `Instruction` for each kind of SML instruction and fix 
    the method `Translator.instruction` so that it properly translates that kind of instruction.
    *Recommended*: write one instruction at a time and test it out thoroughly, before proceeding to the next!
+   
 
-3. Start with the `add` instruction, because the code for translating it is already there — 
+3. Updated: Now create a subclass of Instruction for each of the remaining six kinds of SML instructions 
+   and fix the method Translator.getInstruction so that it properly translates that kind of instruction. 
+   Recommended: write one instruction at a time and test it out thoroughly, before proceeding to the next!
+
+   Old: Start with the `add` instruction, because the code for translating it is already there — 
    in method `Translator.instruction`.  Initially, the program will not compile because there is no class 
    for the instruction `add`; once that class is written, the program will compile.
 
@@ -183,6 +191,7 @@ There are two components to this coursework assignment.
 6. After you finish writing a subclass for an SML instruction (except for `add`), 
    you will have to add code to the method `Translator.instruction` to translate 
    that instruction. The existing code for translating `add` should help you with this.
+   Update: Translator.getInstruction - should have been referenced here, too.
 
 7. There are also a few places in the code with TODO: labels - follow the instructions to
    improve the provided code (or implement missing methods as required). 
