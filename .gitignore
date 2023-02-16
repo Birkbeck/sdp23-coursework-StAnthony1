@@ -189,3 +189,6 @@ gradle-app.setting
 
 .DS_Store
 
+/src/Scrapbook/Scrapbook.java
+/src/sml/tests/test1.sml
+/src/sml/tests/test2.sml
