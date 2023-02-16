@@ -31,10 +31,11 @@ public final class Labels {
 	 * @param label the label
 	 * @return the address the label refers to
 	 */
-	public int getAddress(String label) {
+	public int getAddress(String label) throws NullPointerException{
 		// TODO: Where can NullPointerException be thrown here?
-		//       (Write an explanation.)
-		//       Add code to deal with non-existent labels.
+		//       Null pointer could be thrown to JnzInstruction.execute(),
+		//		the third arg passed is a String which is not a Key in the instance of
+		//		Machine's Labels Field.
 		return labels.get(label);
 	}
 
