@@ -31,7 +31,7 @@ public class JnzInstructionTest {
     // do it via Machine instantiation or manually for testing purposes.
     @Test
     void executeLoopRegisterIsZero() {
-        registers.set(EAX, 0);
+        registers.set(EAX, 1);
         machine.getLabels().addLabel("f3", 2);
         Instruction instruction = new JnzInstruction(null, EAX, "f3");
         Assertions.assertEquals(2, instruction.execute(machine));
@@ -40,14 +40,14 @@ public class JnzInstructionTest {
     @Test
     void executeSkipLoopRegisterNotZero() {
         machine.getLabels().addLabel("f3", 2);
-        registers.set(EAX, 1);
+        registers.set(EAX, 0);
         Instruction instruction = new JnzInstruction(null, EAX, "f3");
         Assertions.assertEquals(-1, instruction.execute(machine));
     }
 
     @Test
     void invalidLabel(){
-        registers.set(EAX, 0);
+        registers.set(EAX, 1);
         Instruction instruction = new JnzInstruction(null, EAX, "f3");
         Assertions.assertThrows(NullPointerException.class ,()-> instruction.execute(machine));
     }

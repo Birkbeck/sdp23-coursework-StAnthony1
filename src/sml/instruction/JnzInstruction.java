@@ -23,8 +23,8 @@ public class JnzInstruction extends Instruction {
     public int execute(Machine m) throws NullPointerException{
         int value = m.getRegisters().get(result);
         if (value == 0)
-            return m.getLabels().getAddress(prior_labelA);
-        return NORMAL_PROGRAM_COUNTER_UPDATE;
+            return NORMAL_PROGRAM_COUNTER_UPDATE;
+        return m.getLabels().getAddress(prior_labelA);
     }
     @Override
     //TODO: implement method
