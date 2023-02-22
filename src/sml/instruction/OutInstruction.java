@@ -15,7 +15,7 @@ public class OutInstruction extends Instruction{
 
     @Override
     public int execute(Machine m) {
-        System.out.print(m.getRegisters().get(result));
+        System.out.print(m.getRegisters().get(result)+"\n");
         return NORMAL_PROGRAM_COUNTER_UPDATE;
     }
     @Override
