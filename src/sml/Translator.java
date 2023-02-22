@@ -72,8 +72,37 @@ public final class Translator {
                 String s = scan();
                 return new AddInstruction(label, Register.valueOf(r), Register.valueOf(s));
             }
-
-            // TODO: add code for all other types of instructions
+            case SubInstruction.OP_CODE -> {
+                String r = scan();
+                String s = scan();
+                return new SubInstruction(label, Register.valueOf(r), Register.valueOf(s));
+            }
+            case MulInstruction.OP_CODE -> {
+                String r = scan();
+                String s = scan();
+                return new MulInstruction(label, Register.valueOf(r), Register.valueOf(s));
+            }
+            case DivInstruction.OP_CODE -> {
+                String r = scan();
+                String s = scan();
+                return new DivInstruction(label, Register.valueOf(r), Register.valueOf(s));
+            }
+            case MovInstruction.OP_CODE -> {
+                String r = scan();
+                //TODO for reflection would it be easier for the MovInstruction constructor
+                // to take Strings as args?
+                int i = Integer.parseInt(scan());
+                return new MovInstruction(label, Register.valueOf(r), i);
+            }
+            case JnzInstruction.OP_CODE -> {
+                String r = scan();
+                String prior_label = scan();
+                return new JnzInstruction(label, Register.valueOf(r), prior_label);
+            }
+            case OutInstruction.OP_CODE -> {
+                String r = scan();
+                return new OutInstruction(label, Register.valueOf(r));
+            }
 
             // TODO: Then, replace the switch by using the Reflection API
 
