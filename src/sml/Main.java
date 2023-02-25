@@ -20,6 +20,7 @@ public class Main {
 			t.readAndTranslate(m.getLabels(), m.getProgram());
 
 			System.out.println("Here is the program; it has " + m.getProgram().size() + " instructions.");
+			//System.out.println("Labels: " + m.getLabels());
 			System.out.println(m);
 
 			System.out.println("Beginning program execution.");
@@ -29,10 +30,10 @@ public class Main {
 			System.out.println("Values of registers at program termination:" + m.getRegisters() + ".");
 		}
 		catch (IOException e) {
-			System.out.println("Error reading the program from " + args[0]);
+			System.out.println(e.getMessage());
+
 		}
 		catch (ArithmeticException e){
-			//TODO could add more detail to this exception (program counter, register containing 0)
 			System.out.println("Machine cannot divide by zero");
 		}
 		catch (NullPointerException e){
