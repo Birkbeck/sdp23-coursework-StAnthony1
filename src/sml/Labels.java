@@ -1,8 +1,10 @@
 package sml;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 // TODO: write a JavaDoc for the class
 
@@ -10,7 +12,7 @@ import java.util.Objects;
  *
  * @author ...
  */
-public final class Labels {
+public final class Labels{
 	private final Map<String, Integer> labels = new HashMap<>();
 
 	/**
@@ -19,9 +21,12 @@ public final class Labels {
 	 * @param label the label
 	 * @param address the address the label refers to
 	 */
-	public void addLabel(String label, int address) {
+	public void addLabel(String label, int address) throws IOException {
 		Objects.requireNonNull(label);
-		// TODO: Add a check that there are no label duplicates.
+		if (labels.containsKey(label)){
+			Throwable msg = new Throwable("duplicate label in instruction set");
+			throw new IOException(msg);
+		}
 		labels.put(label, address);
 	}
 
@@ -40,23 +45,41 @@ public final class Labels {
 	}
 
 	/**
-	 * representation of this instance,
-	 * in the form "[label -> address, label -> address, ..., label -> address]"
-	 *
-	 * @return the string representation of the labels map
-	 */
-	@Override
-	public String toString() {
-		// TODO: Implement the method using the Stream API (see also class Registers).
-		return "";
-	}
-
-	// TODO: Implement equals and hashCode (needed in class Machine).
-
-	/**
 	 * Removes the labels
 	 */
 	public void reset() {
 		labels.clear();
 	}
+
+	/**
+	 * Tests for equal type and equal membership of labels map
+	 * @param o any Object
+	 * @return Boolean
+	 */
+	@Override
+	public boolean equals(Object o){
+		if (o instanceof Labels other){
+			return this.labels.equals(other.labels);
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode(){
+		return labels.hashCode();
+	}
+
+	/**
+	 * Gives String representation of this instance
+	 *
+	 * @return the string representation of the labels map
+	 */
+	@Override
+	public String toString() {
+		return labels.entrySet().stream()
+				.sorted(Map.Entry.comparingByKey())
+				.map(e -> e.getKey() + " -> " + e.getValue())
+				.collect(Collectors.joining(",", "[", "]")) ;
+	}
+
 }
