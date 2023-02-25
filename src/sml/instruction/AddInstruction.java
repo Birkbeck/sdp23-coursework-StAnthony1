@@ -4,10 +4,12 @@ import sml.Instruction;
 import sml.Machine;
 import sml.RegisterName;
 
-// TODO: write a JavaDoc for the class
+import java.util.Objects;
+
 
 /**
- * @author
+ * This class sums two integers and stores the sum in a Register
+ * @author oneilo1
  */
 
 public class AddInstruction extends Instruction {
@@ -16,12 +18,27 @@ public class AddInstruction extends Instruction {
 
 	public static final String OP_CODE = "add";
 
+	/**
+	 * Constructor: An AddInstruction with two target Register whose values will be summed.
+	 * The sum will be stored in the first register.
+	 * @param label can be type String or null
+	 * @param result must be of type RegisterName
+	 * @param source must be of type RegisterName
+	 */
 	public AddInstruction(String label, RegisterName result, RegisterName source) {
 		super(label, OP_CODE);
 		this.result = result;
 		this.source = source;
 	}
 
+	/**
+	 * Executes the AddInstruction in the given machine instance,
+	 * altering that values within those registers.
+	 * Precondition: the machine parameter must have RegisterNames within its Registers
+	 * which match those passed to the AddInstruction's constructor.
+	 * @param m some instance of machine
+	 * @return int
+	 */
 	@Override
 	public int execute(Machine m) {
 		int value1 = m.getRegisters().get(result);
@@ -29,18 +46,37 @@ public class AddInstruction extends Instruction {
 		m.getRegisters().set(result, value1 + value2);
 		return NORMAL_PROGRAM_COUNTER_UPDATE;
 	}
+
+	/**
+	 * tests for equality between two AddInstruction instances. Fields
+	 * label, result and source must be equal for the two instances to
+	 * be equal.
+	 *
+	 * @return Boolean
+	 */
 	@Override
-	//TODO: implement method
 	public boolean equals(Object o) {
-		return true;
+		if (o instanceof AddInstruction other) {
+			return Objects.equals(this.label, other.label)
+					&& Objects.equals(this.result, other.result)
+					&& Objects.equals(this.source, other.source);
+		}
+		return false;
 	}
 
+	/**
+	 * @return hash code for this AddInstruction.
+	 */
 	@Override
-	//TODO: implement method
 	public int hashCode(){
-		return 1;
+		return Objects.hash(label, result, source);
 	}
 
+	/**
+	 * String representation of the instruction.
+	 *
+	 * @return pretty formatted version of the instruction.
+	 */
 	@Override
 	public String toString() {
 		return getLabelString() + getOpcode() + " " + result + " " + source;
