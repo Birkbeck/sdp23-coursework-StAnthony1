@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 import static sml.Instruction.NORMAL_PROGRAM_COUNTER_UPDATE;
 
 /**
- * Represents the machine, the context in which programs run.
+ * The Machine class executes a single Small Machine Language program
  * <p>
- * An instance contains 32 registers and methods to access and change them.
+ * An instance contains a (class) Registers populated with a fixed number of (enum) Register
+ * and chnages the value of these Register according to the sequential execution of each
+ * (class) Instruction contained in the Machine field program.
  *
  */
 public final class Machine {
@@ -21,10 +23,14 @@ public final class Machine {
 
 	private final Registers registers;
 
-	// The program counter; it contains the index (in program)
-	// of the next instruction to be executed.
 	private int programCounter = 0;
-
+	/**
+	 * Constructor: a machine with registers (registers must match any named
+	 * registers in the input program
+	 *
+	 * @param registers must be of type Registers
+	 *
+	 */
 	public Machine(Registers registers) {
 		this.registers = registers;
 	}
@@ -33,7 +39,6 @@ public final class Machine {
 	 * Execute the program in program, beginning at instruction 0.
 	 * Precondition: the program and its labels have been stored properly.
 	 */
-	//TODO Catch arithmetic exception thrown by DivInstruction.execute()
 	public void execute() throws ArithmeticException, NullPointerException{
 		programCounter = 0;
 		registers.clear();
@@ -45,15 +50,29 @@ public final class Machine {
 					: programCounterUpdate;
 		}
 	}
-
+	/**
+	 * returns SML machine's labels field
+	 *
+	 * @return Map of Strings mapped to Integers
+	 */
 	public Labels getLabels() {
 		return this.labels;
 	}
 
+	/**
+	 * returns SML machine's program field
+	 *
+	 * @return ArrayList of Instruction
+	 */
 	public List<Instruction> getProgram() {
 		return this.program;
 	}
 
+	/**
+	 * returns SML machine's Registers field
+	 *
+	 * @return Map of Register (enum) mapped to Integers
+	 */
 	public Registers getRegisters() {
 		return this.registers;
 	}
@@ -70,14 +89,16 @@ public final class Machine {
 				.map(Instruction::toString)
 				.collect(Collectors.joining("\n"));
 	}
-
-	// TODO: use pattern matching for instanceof
-	// https://docs.oracle.com/en/java/javase/14/language/pattern-matching-instanceof-operator.html
+	/**
+	 * tests for equality between two machine instances. Fields
+	 * labels, program, registers and program counter must be equal
+	 * for the two instances to be equal.
+	 *
+	 * @return Boolean
+	 */
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Machine) {
-			// TODO:
-			Machine other = (Machine) o;
+		if (o instanceof Machine other) {
 			return Objects.equals(this.labels, other.labels)
 					&& Objects.equals(this.program, other.program)
 					&& Objects.equals(this.registers, other.registers)
