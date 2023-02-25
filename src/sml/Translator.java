@@ -1,12 +1,11 @@
 package sml;
 
-import sml.instruction.*;
-
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static sml.Registers.Register;
 
@@ -32,7 +31,7 @@ public final class Translator {
     // prog (the program)
     // return "no errors were detected"
 
-    public void readAndTranslate(Labels labels, List<Instruction> program) throws IOException {
+    public void readAndTranslate(Labels labels, List<Instruction> program) throws IOException, ClassNotFoundException {
         try (var sc = new Scanner(new File(fileName), StandardCharsets.UTF_8)) {
             labels.reset();
             program.clear();
@@ -61,62 +60,51 @@ public final class Translator {
      * The input line should consist of a single SML instruction,
      * with its label already removed.
      */
-    private Instruction getInstruction(String label) {
+    private Instruction getInstruction(String label) throws ClassNotFoundException, SecurityException {
         if (line.isEmpty())
             return null;
-
         String opcode = scan();
-        switch (opcode) {
-            case AddInstruction.OP_CODE -> {
-                String r = scan();
-                String s = scan();
-                return new AddInstruction(label, Register.valueOf(r), Register.valueOf(s));
-            }
-            case SubInstruction.OP_CODE -> {
-                String r = scan();
-                String s = scan();
-                return new SubInstruction(label, Register.valueOf(r), Register.valueOf(s));
-            }
-            case MulInstruction.OP_CODE -> {
-                String r = scan();
-                String s = scan();
-                return new MulInstruction(label, Register.valueOf(r), Register.valueOf(s));
-            }
-            case DivInstruction.OP_CODE -> {
-                String r = scan();
-                String s = scan();
-                return new DivInstruction(label, Register.valueOf(r), Register.valueOf(s));
-            }
-            case MovInstruction.OP_CODE -> {
-                String r = scan();
-                //TODO for reflection would it be easier for the MovInstruction constructor
-                // to take Strings as args?
-                int i = Integer.parseInt(scan());
-                return new MovInstruction(label, Register.valueOf(r), i);
-            }
-            case JnzInstruction.OP_CODE -> {
-                String r = scan();
-                String prior_label = scan();
-                return new JnzInstruction(label, Register.valueOf(r), prior_label);
-            }
-            case OutInstruction.OP_CODE -> {
-                String r = scan();
-                return new OutInstruction(label, Register.valueOf(r));
-            }
+        //test
+        System.out.println(opcode);
+        String classNameString = getClassNameString(opcode);
 
-            // TODO: Then, replace the switch by using the Reflection API
-
-            // TODO: Next, use dependency injection to allow this machine class
-            //       to work with different sets of opcodes (different CPUs)
-
-            default -> {
-                System.out.println("Unknown instruction: " + opcode);
+        String[] unparsedParams = getParams();
+        int paramsLength = unparsedParams.length + 1;
+        for (Constructor<?> con: Class.forName(classNameString).getConstructors()){
+            if (con.getParameterCount() == paramsLength){
+                System.out.println(con);
+                try{
+                    Object[] params = new Object[paramsLength];
+                    Class<?>[] paramConTypes = con.getParameterTypes();
+                    System.out.println(Arrays.toString(paramConTypes));
+                    for (int i = 0; i < paramsLength; i++) {
+                        if(i == 0) params[i] = label;
+                        else if (paramConTypes[i].equals(RegisterName.class)){
+                            params[i] = Register.valueOf(unparsedParams[i-1]);
+                            }
+                        else {
+                        Class<?> c = toWrapper(paramConTypes[i]);
+                        params[i] = c.getConstructor(String.class).newInstance(unparsedParams[i-1]);
+                        }
+                        System.out.println(params[i]);
+                    }
+                    return (Instruction) con.newInstance(params);
+                    }
+                catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                     IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
         return null;
+        }
+
+
+    private String getClassNameString(String opcode){
+        String upperOpcode = opcode.toUpperCase();
+        return "sml.instruction." + upperOpcode.charAt(0) +
+                upperOpcode.substring(1).toLowerCase() + "Instruction";
     }
-
-
     private String getLabel() {
         String word = scan();
         if (word.endsWith(":"))
@@ -127,7 +115,37 @@ public final class Translator {
         return null;
     }
 
-    /*
+    private String[] getParams(){
+        ArrayList<String> params = new ArrayList<>();
+        while (!line.isEmpty()){
+            params.add(scan());
+            System.out.println(params);
+        }
+        return params.toArray(new String[0]);
+    }
+
+
+    private static final Map<Class<?>, Class<?>> TYPE_WRAPPERS = Map.of(
+            int.class, Integer.class,
+            long.class, Long.class,
+            boolean.class, Boolean.class,
+            byte.class, Byte.class,
+            char.class, Character.class,
+            float.class, Float.class,
+            double.class, Double.class,
+            short.class, Short.class,
+            void.class, Void.class);
+    /**
+     * Return the correct Wrapper class if testClass is primitive
+     *
+     * @param testClass class being tested
+     * @return Object class or testClass
+     */
+    private static Class<?> toWrapper(Class<?> testClass) {
+        return TYPE_WRAPPERS.getOrDefault(testClass, testClass);
+    }
+
+    /**
      * Return the first word of line and remove it from line.
      * If there is no word, return "".
      */
@@ -137,10 +155,11 @@ public final class Translator {
         for (int i = 0; i < line.length(); i++)
             if (Character.isWhitespace(line.charAt(i))) {
                 String word = line.substring(0, i);
-                line = line.substring(i);
+                    line = line.substring(i);
                 return word;
             }
-
-        return line;
+        String lastWord = line;
+        line = "";
+        return lastWord;
     }
 }
