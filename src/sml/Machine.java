@@ -10,9 +10,9 @@ import static sml.Instruction.NORMAL_PROGRAM_COUNTER_UPDATE;
 /**
  * The Machine class executes a single Small Machine Language program
  * <p>
- * An instance contains a (class) Registers populated with a fixed number of (enum) Register
- * and chnages the value of these Register according to the sequential execution of each
- * (class) Instruction contained in the Machine field program.
+ * An instance contains a (class) Registers populated with a fixed number of (enum) RegisterName
+ * and changes the Integer values associated with these RegisterName according to the sequential
+ * execution of each Instruction contained in the Machine field program.
  *
  */
 public final class Machine {
@@ -24,9 +24,9 @@ public final class Machine {
 	private final Registers registers;
 
 	private int programCounter = 0;
+
 	/**
-	 * Constructor: a machine with registers (registers must match any named
-	 * registers in the input program
+	 * Constructor: a machine ready to load a SML program from a Translator class
 	 *
 	 * @param registers must be of type Registers
 	 *
@@ -36,7 +36,7 @@ public final class Machine {
 	}
 
 	/**
-	 * Execute the program in program, beginning at instruction 0.
+	 * Executes the program in program, beginning at instruction 0.
 	 * Precondition: the program and its labels have been stored properly.
 	 */
 	public void execute() throws ArithmeticException, NullPointerException{
@@ -106,7 +106,9 @@ public final class Machine {
 		}
 		return false;
 	}
-
+	/**
+	 * @return hash code for this Machine.
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(labels, program, registers, programCounter);
