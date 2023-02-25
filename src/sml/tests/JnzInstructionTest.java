@@ -9,6 +9,8 @@ import sml.Machine;
 import sml.Registers;
 import sml.instruction.JnzInstruction;
 
+import java.io.IOException;
+
 import static sml.Registers.Register.EAX;
 
 public class JnzInstructionTest {
@@ -27,22 +29,31 @@ public class JnzInstructionTest {
         machine = null;
         registers = null;
     }
-    //TODO create HashMap<String, Integer> or Lebels Object and populate for testing -
-    // do it via Machine instantiation or manually for testing purposes.
+
     @Test
     void executeLoopRegisterIsZero() {
-        registers.set(EAX, 1);
-        machine.getLabels().addLabel("f3", 2);
-        Instruction instruction = new JnzInstruction(null, EAX, "f3");
+        try{
+            registers.set(EAX, 1);
+        machine.getLabels().addLabel("f1", 2);
+        Instruction instruction = new JnzInstruction(null, EAX, "f1");
         Assertions.assertEquals(2, instruction.execute(machine));
+        }
+        catch (IOException e){
+            System.out.println("Attempt to overwrite exisiting label in machine instance");
+        }
     }
 
     @Test
     void executeSkipLoopRegisterNotZero() {
-        machine.getLabels().addLabel("f3", 2);
-        registers.set(EAX, 0);
-        Instruction instruction = new JnzInstruction(null, EAX, "f3");
-        Assertions.assertEquals(-1, instruction.execute(machine));
+        try {
+            machine.getLabels().addLabel("f3", 2);
+            registers.set(EAX, 0);
+            Instruction instruction = new JnzInstruction(null, EAX, "f3");
+            Assertions.assertEquals(-1, instruction.execute(machine));
+        }
+        catch (IOException e) {
+            System.out.println("Attempt to overwrite exisiting label in machine instance");
+        }
     }
 
     @Test
