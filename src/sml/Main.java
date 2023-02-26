@@ -38,6 +38,8 @@ public class Main {
 		}
 		catch (NullPointerException e){
 			System.out.println("Machine's labels field has no key corresponding the label passed in jnz instruction");
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("problem with dependency injection in Translator.getInstruction()");
 		}
 	}
 }
