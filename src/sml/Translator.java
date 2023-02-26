@@ -10,11 +10,14 @@ import java.util.*;
 import static sml.Registers.Register;
 
 /**
- * This class ....
+ * This class sets up an SML machine with an executable program.
+ * It takes SML input from a file, converts that input to program
+ * instructions and passes the executable program to a single machine
+ * instance.
  * <p>
  * The translator of a <b>S</b><b>M</b>al<b>L</b> program.
  *
- * @author ...
+ * @author oneilo1
  */
 public final class Translator {
 
@@ -23,6 +26,25 @@ public final class Translator {
     // line contains the characters in the current line that's not been processed yet
     private String line = "";
 
+    /**
+     * Type Wrapper Map used by toWrapper function for converting
+     * primitives to their Wrapper class
+     */
+    private static final Map<Class<?>, Class<?>> TYPE_WRAPPERS = Map.of(
+            int.class, Integer.class,
+            long.class, Long.class,
+            boolean.class, Boolean.class,
+            byte.class, Byte.class,
+            char.class, Character.class,
+            float.class, Float.class,
+            double.class, Double.class,
+            short.class, Short.class,
+            void.class, Void.class);
+
+    /**
+     * Constructor creates translator instance with associated input file.
+     * @param fileName
+     */
     public Translator(String fileName) {
         this.fileName =  fileName;
     }
@@ -64,45 +86,55 @@ public final class Translator {
         if (line.isEmpty())
             return null;
         String opcode = scan();
-        //test
-        System.out.println(opcode);
+        //use opcode to get Instruction class name
         String classNameString = getClassNameString(opcode);
-
+        //retrieve String parameters from input
         String[] unparsedParams = getParams();
-        int paramsLength = unparsedParams.length + 1;
+        int paramsLength = unparsedParams.length + 1;//label must be included
         for (Constructor<?> con: Class.forName(classNameString).getConstructors()){
             if (con.getParameterCount() == paramsLength){
-                System.out.println(con);
                 try{
-                    Object[] params = new Object[paramsLength];
+                    //create array for typedParams of various types
+                    Object[] typedParams = new Object[paramsLength];
                     Class<?>[] paramConTypes = con.getParameterTypes();
-                    System.out.println(Arrays.toString(paramConTypes));
                     for (int i = 0; i < paramsLength; i++) {
-                        if(i == 0) params[i] = label;
+                        //first param will always be label (can be null)
+                        if(i == 0) typedParams[i] = label;
+                        //check if param is of type RegisterName
                         else if (paramConTypes[i].equals(RegisterName.class)){
-                            params[i] = Register.valueOf(unparsedParams[i-1]);
+                            typedParams[i] = Register.valueOf(unparsedParams[i-1]);
                             }
+                        //assume param is of primitive type - use wrapper
+                        // class to constuct new param from string.
                         else {
-                        Class<?> c = toWrapper(paramConTypes[i]);
-                        params[i] = c.getConstructor(String.class).newInstance(unparsedParams[i-1]);
+                            Class<?> c = paramConTypes[i];
+                            if (c.isPrimitive()){
+                                c = toWrapper(c);
+                            }
+                            typedParams[i] = c.getConstructor(String.class).newInstance(unparsedParams[i-1]);
                         }
-                        System.out.println(params[i]);
                     }
-                    return (Instruction) con.newInstance(params);
+                    //call Instruction with correctly typed typedParams
+                    return (Instruction) con.newInstance(typedParams);
                     }
                 catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                      IllegalAccessException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException("Dependency injection issue in Translator class");
                 }
             }
         }
         return null;
-        }
+    }
 
-
+    /**
+     * takes opcode and converts to a string matching the name of an
+     * Instruction class with package prefix.
+     * @param opcode
+     * @return String representing an Instruction
+     */
     private String getClassNameString(String opcode){
         String upperOpcode = opcode.toUpperCase();
-        return "sml.instruction." + upperOpcode.charAt(0) +
+        return  "sml.instruction." + upperOpcode.charAt(0) +
                 upperOpcode.substring(1).toLowerCase() + "Instruction";
     }
     private String getLabel() {
@@ -115,26 +147,20 @@ public final class Translator {
         return null;
     }
 
+    /**
+     * Creates String Array of un-typed parameters for Instruction class constructor,
+     * excluding the first param (which should always be label)
+     * @return String[]
+     */
     private String[] getParams(){
         ArrayList<String> params = new ArrayList<>();
         while (!line.isEmpty()){
             params.add(scan());
-            System.out.println(params);
         }
         return params.toArray(new String[0]);
     }
 
 
-    private static final Map<Class<?>, Class<?>> TYPE_WRAPPERS = Map.of(
-            int.class, Integer.class,
-            long.class, Long.class,
-            boolean.class, Boolean.class,
-            byte.class, Byte.class,
-            char.class, Character.class,
-            float.class, Float.class,
-            double.class, Double.class,
-            short.class, Short.class,
-            void.class, Void.class);
     /**
      * Return the correct Wrapper class if testClass is primitive
      *
