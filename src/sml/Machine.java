@@ -107,7 +107,7 @@ public final class Machine {
 		return false;
 	}
 	/**
-	 * @return hash code for this Machine.
+	 * @return int hash code for this Machine.
 	 */
 	@Override
 	public int hashCode() {
