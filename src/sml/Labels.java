@@ -6,11 +6,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-// TODO: write a JavaDoc for the class
 
 /**
- *
- * @author ...
+ *This class is utilised by the SML machine class to
+ * map labels to program counter positions corresponding to
+ * where the label appears in the SML program instruction sequnece.
+ * @author oneilo1
  */
 public final class Labels{
 	private final Map<String, Integer> labels = new HashMap<>();
@@ -64,6 +65,10 @@ public final class Labels{
 		return false;
 	}
 
+	/**
+	 * returns hashcode for this instruction.
+	 * @return int
+	 */
 	@Override
 	public int hashCode(){
 		return labels.hashCode();

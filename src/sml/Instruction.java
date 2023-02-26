@@ -3,9 +3,10 @@ package sml;
 // TODO: write a JavaDoc for the class
 
 /**
- * Represents an abstract instruction.
+ * The Instruction abstract class represents an instruction which
+ * can be executed by the class Machine in SML.
  *
- * @author ...
+ * @author oneilo1
  */
 public abstract class Instruction {
 	protected final String label;
@@ -48,7 +49,9 @@ public abstract class Instruction {
 		return (getLabel() == null) ? "" : getLabel() + ": ";
 	}
 
+	@Override
 	public abstract boolean equals(Object o);
+
 	@Override
 	public abstract int hashCode();
 

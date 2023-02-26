@@ -65,7 +65,7 @@ public class AddInstruction extends Instruction {
 	}
 
 	/**
-	 * @return hash code for this AddInstruction.
+	 * @return int hash code for this AddInstruction.
 	 */
 	@Override
 	public int hashCode(){
