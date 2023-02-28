@@ -28,7 +28,9 @@ public final class Translator {
 
     /**
      * Type Wrapper Map used by toWrapper function for converting
-     * primitives to their Wrapper class
+     * primitives to their Wrapper class - will allow a variety of
+     * new instruction classes to be added which take primitive class
+     * params.
      */
     private static final Map<Class<?>, Class<?>> TYPE_WRAPPERS = Map.of(
             int.class, Integer.class,
@@ -43,7 +45,7 @@ public final class Translator {
 
     /**
      * Constructor creates translator instance with associated input file.
-     * @param fileName
+     * @param fileName name of a file containing an SML program.
      */
     public Translator(String fileName) {
         this.fileName =  fileName;
@@ -100,7 +102,7 @@ public final class Translator {
                     for (int i = 0; i < paramsLength; i++) {
                         //first param will always be label (can be null)
                         if(i == 0) typedParams[i] = label;
-                        //check if param is of type RegisterName
+                        //check if param is of type RegisterName - TODO could change this to accept any enum
                         else if (paramConTypes[i].equals(RegisterName.class)){
                             typedParams[i] = Register.valueOf(unparsedParams[i-1]);
                             }

@@ -1,7 +1,5 @@
 package sml;
 
-// TODO: write a JavaDoc for the class
-
 /**
  * The Instruction abstract class represents an instruction which
  * can be executed by the class Machine in SML.
