@@ -18,7 +18,7 @@ class AddInstructionTest {
 
   @BeforeEach
   void setUp() {
-    machine = new Machine(new Registers());
+    machine = Machine.getMachine();
     registers = machine.getRegisters();
     //...
   }
