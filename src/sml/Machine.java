@@ -17,6 +17,8 @@ import static sml.Instruction.NORMAL_PROGRAM_COUNTER_UPDATE;
  */
 public final class Machine {
 
+	private static Machine instance;
+
 	private final Labels labels = new Labels();
 
 	private final List<Instruction> program = new ArrayList<>();
@@ -26,15 +28,24 @@ public final class Machine {
 	private int programCounter = 0;
 
 	/**
-	 * Constructor: a machine ready to load a SML program from a Translator class
-	 *
+	 * Private Constructor: a machine ready to load a SML program from a
+	 * Translator class - constructor called from within machine class in
+	 * getMachine() to create Singleton and prevent multiple instances of
+	 * machine being created.
 	 * @param registers must be of type Registers
 	 *
 	 */
-	public Machine(Registers registers) {
+	private Machine(Registers registers) {
+
 		this.registers = registers;
 	}
 
+	public static synchronized Machine getMachine(){
+		if (instance == null){
+			instance = new Machine(new Registers());
+		}
+		return instance;
+	}
 	/**
 	 * Executes the program in program, beginning at instruction 0.
 	 * Precondition: the program and its labels have been stored properly.
