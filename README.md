@@ -166,7 +166,7 @@ There are two components to this coursework assignment.
    which should be *protected*, so that they are accessible in any subclasses.
 
 2. Updated: Study the implementation of a concrete subclass AddInstruction of Instruction and associated 
-   test class AddInstructionTest.
+   test class tests.AddInstructionTest.
 
    OLd: Now create a subclass of `Instruction` for each kind of SML instruction and fix 
    the method `Translator.instruction` so that it properly translates that kind of instruction.
