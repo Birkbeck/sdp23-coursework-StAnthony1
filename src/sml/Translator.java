@@ -77,6 +77,8 @@ public final class Translator {
 
     /**
      * Translates the current line into an instruction with the given label
+     * uses reflection API to discover class and compatible constructors
+     * and dependency injection then used to instantiate some concrete subclass of Instruction
      *
      * @param label the instruction label
      * @return the new instruction
@@ -102,7 +104,7 @@ public final class Translator {
                     for (int i = 0; i < paramsLength; i++) {
                         //first param will always be label (can be null)
                         if(i == 0) typedParams[i] = label;
-                        //check if param is of type RegisterName - TODO could change this to accept any enum
+                        //check if param is of type RegisterName
                         else if (paramConTypes[i].equals(RegisterName.class)){
                             typedParams[i] = Register.valueOf(unparsedParams[i-1]);
                             }
@@ -116,7 +118,7 @@ public final class Translator {
                             typedParams[i] = c.getConstructor(String.class).newInstance(unparsedParams[i-1]);
                         }
                     }
-                    //call Instruction with correctly typed typedParams
+                    //call Instruction with correctly typed typedParams - dependency injection occurs here
                     return (Instruction) con.newInstance(typedParams);
                     }
                 catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
@@ -131,7 +133,7 @@ public final class Translator {
     /**
      * takes opcode and converts to a string matching the name of an
      * Instruction class with package prefix.
-     * @param opcode
+     * @param opcode is first call to scan for each line in input file
      * @return String representing an Instruction
      */
     private String getClassNameString(String opcode){
@@ -139,6 +141,11 @@ public final class Translator {
         return  "sml.instruction." + upperOpcode.charAt(0) +
                 upperOpcode.substring(1).toLowerCase() + "Instruction";
     }
+
+    /**
+     * checks for presence of label
+     * @return String corresponding to label name or null if no label
+     */
     private String getLabel() {
         String word = scan();
         if (word.endsWith(":"))
