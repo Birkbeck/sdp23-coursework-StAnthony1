@@ -1,4 +1,4 @@
-package sml.tests;
+package tests;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -31,7 +31,7 @@ public class JnzInstructionTest {
     }
 
     @Test
-    void executeLoopRegisterIsZero() {
+    void executeLoopRegisterNotZero() {
         try{
             registers.set(EAX, 1);
         machine.getLabels().addLabel("f1", 2);
@@ -44,7 +44,7 @@ public class JnzInstructionTest {
     }
 
     @Test
-    void executeSkipLoopRegisterNotZero() {
+    void executeSkipLoopRegisterIsZero() {
         try {
             machine.getLabels().addLabel("f3", 2);
             registers.set(EAX, 0);

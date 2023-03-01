@@ -1,4 +1,4 @@
-package sml.tests;
+package tests;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test;
 import sml.Instruction;
 import sml.Machine;
 import sml.Registers;
-import sml.instruction.DivInstruction;
+import sml.instruction.MulInstruction;
 
 import static sml.Registers.Register.EAX;
 import static sml.Registers.Register.EBX;
 
-public class DivInstructionTest {
+public class MulInstructionTest {
     private Machine machine;
     private Registers registers;
 
@@ -30,28 +30,20 @@ public class DivInstructionTest {
     }
 
     @Test
-    void executeInvalidZeroDiv() {
-        registers.set(EAX, 10);
-        registers.set(EBX, 0);
-        Instruction instruction = new DivInstruction(null, EAX, EBX);
-        Assertions.assertThrows(ArithmeticException.class , () ->instruction.execute(machine));
-    }
-    @Test
     void executeValid() {
-        registers.set(EAX, 6);
-        registers.set(EBX, 2);
-        Instruction instruction = new DivInstruction(null, EAX, EBX);
+        registers.set(EAX, 5);
+        registers.set(EBX, 6);
+        Instruction instruction = new MulInstruction(null, EAX, EBX);
         instruction.execute(machine);
-        Assertions.assertEquals(3, machine.getRegisters().get(EAX));
+        Assertions.assertEquals(30, machine.getRegisters().get(EAX));
     }
 
     @Test
     void executeValidTwo() {
-        registers.set(EAX, -6);
-        registers.set(EBX, 2);
-        Instruction instruction = new DivInstruction(null, EAX, EBX);
+        registers.set(EAX, -5);
+        registers.set(EBX, 6);
+        Instruction instruction = new MulInstruction(null, EAX, EBX);
         instruction.execute(machine);
-        Assertions.assertEquals(-3, machine.getRegisters().get(EAX));
+        Assertions.assertEquals(-30, machine.getRegisters().get(EAX));
     }
-
 }
