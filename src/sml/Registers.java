@@ -3,10 +3,10 @@ package sml;
 import java.util.*;
 import java.util.stream.Collectors;
 
-// TODO: write a JavaDoc for the class
 
 /**
- *The registers of a Machine class
+ *The registers cache the integer values the
+ * machine is working with
  * @author oneilo1
  */
 public final class Registers {
