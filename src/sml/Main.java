@@ -20,7 +20,6 @@ public class Main {
 			t.readAndTranslate(m.getLabels(), m.getProgram());
 
 			System.out.println("Here is the program; it has " + m.getProgram().size() + " instructions.");
-			//System.out.println("Labels: " + m.getLabels());
 			System.out.println(m);
 
 			System.out.println("Beginning program execution.");
@@ -31,7 +30,6 @@ public class Main {
 		}
 		catch (IOException e) {
 			System.out.println(e.getMessage());
-
 		}
 		catch (ArithmeticException e){
 			System.out.println("Machine cannot divide by zero");
