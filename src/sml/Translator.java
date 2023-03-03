@@ -49,6 +49,14 @@ public final class Translator {
     // prog (the program)
     // return "no errors were detected"
 
+    /**
+     *
+     * @param labels String - can be null
+     * @param program empty program belonging to a machine instance to be populated.
+     * @throws IOException
+     * alterations made to reflect the use of factory method in the production
+     * of concrete instruction classes.
+     */
     public void readAndTranslate(Labels labels, List<Instruction> program) throws IOException{
         try (var sc = new Scanner(new File(fileName), StandardCharsets.UTF_8)) {
             labels.reset();
@@ -73,14 +81,10 @@ public final class Translator {
     }
 
     /**
-     * Translates the current line into an instruction with the given label
-     * uses reflection API to discover class and compatible constructors
-     * and dependency injection then used to instantiate some concrete subclass of Instruction
-     *
+     * helper function for selecting the correct InstructionCreator
+     * @param op String representing the opcode
      * @return the new InstructionCreator
-     * <p>
-     * The input line should consist of a single SML instruction,
-     * with its label already removed.
+     *
      */
     private InstructionCreator createInstruction(String op){
         return switch (op) {
